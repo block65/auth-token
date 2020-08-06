@@ -1,7 +1,9 @@
 /* eslint-disable camelcase */
 import { AssertionError } from 'assert';
 
-export interface AuthToken<TClaims extends AccessTokenClaims> {
+export interface AuthToken<
+  TClaims extends AccessTokenClaims = AccessTokenClaims
+> {
   id: string;
   ips: string[];
   jwt: string;
@@ -13,7 +15,7 @@ export interface AuthToken<TClaims extends AccessTokenClaims> {
   expiresAt: number;
   ttl: number;
 }
-export interface IdToken<TClaims extends IdTokenClaims> {
+export interface IdToken<TClaims extends IdTokenClaims = IdTokenClaims> {
   id: string;
   claims: TClaims;
   isValid: () => boolean;

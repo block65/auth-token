@@ -83,6 +83,7 @@ test('googleAccessToken', () => {
   });
   expect(auth.id).toEqual(googleAccessToken.origin_jti);
 });
+
 test('googleIdToken', () => {
   const googleIdToken: GoogleCognitoIdTokenClaims = {
     at_hash: 'HUILGYBUIKGYIKGYUKgyukGYUKgyukGYUK',
@@ -113,4 +114,6 @@ test('googleIdToken', () => {
 
   const auth = createIdToken(googleIdToken);
   expect(auth.id).toEqual(googleIdToken.origin_jti);
+
+  expect(auth.claims.username.startsWith('Goog;e')).toBeTruthy();
 });
