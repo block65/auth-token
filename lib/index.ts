@@ -1,4 +1,6 @@
 /* eslint-disable camelcase */
+import { AssertionError } from 'assert';
+
 type Claims = Record<string, unknown>;
 
 export interface AuthToken<TClaims extends Claims> {
@@ -88,6 +90,18 @@ export type GoogleAccessTokenClaims = {
   'cognito:groups': string[];
 };
 
+function assertString(val: unknown, message: string): asserts val is string {
+  if (typeof val !== 'string') {
+    throw new AssertionError({ message, actual: val, expected: String });
+  }
+}
+
+function assertNumber(val: unknown, message: string): asserts val is number {
+  if (typeof val !== 'number') {
+    throw new AssertionError({ message, actual: val, expected: Number });
+  }
+}
+
 export function createAuthToken<
   T extends CognitoAccessTokenClaims | GoogleAccessTokenClaims
 >({
@@ -98,22 +112,30 @@ export function createAuthToken<
 }: {
   jwt: string;
   ips: string[];
-  claims: T;
+  claims: Record<string, unknown>;
   userId?: string;
-}): Readonly<AuthToken<T>> {
+}): AuthToken<any> {
+  const { jti, client_id, exp, iat, scope } = claims;
+
+  assertString(jti, 'client_id is not a string');
+  assertString(client_id, 'client_id is not a string');
+  assertString(scope, 'scope is not a string');
+  assertNumber(exp, 'exp is not a number');
+  assertNumber(iat, 'iat is not a number');
+
   return Object.freeze({
-    id: claims.jti,
+    id: jti,
     ips,
     jwt,
     userId,
-    clientId: claims.client_id,
-    scope: claims.scope.split(' '),
-    expiresAt: claims.exp,
-    ttl: claims.exp - claims.iat,
+    clientId: client_id,
+    scope: scope.split(' '),
+    expiresAt: exp,
+    ttl: exp - iat,
     claims,
     isValid() {
       const nowSecs = Date.now() / 1000;
-      return claims.exp <= nowSecs && (!claims.iat || claims.iat >= nowSecs);
+      return exp <= nowSecs && (!iat || iat >= nowSecs);
     },
   });
 }

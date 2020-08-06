@@ -1,5 +1,5 @@
 {
-  "name": "@colacube/auth-token",
+  "name": "@block65/auth-token",
   "version": "2.0.0",
   "license": "UNLICENSED",
   "main": "dist/index.js",
