@@ -1,11 +1,11 @@
 import {
-  CognitoAccessTokenClaims,
-  CognitoGoogleIdTokenClaims,
-  CognitoIdTokenClaims,
-  GoogleAccessTokenClaims,
+  GoogleCognitoIdTokenClaims,
+  GoogleCognitoAccessTokenClaims,
+  RegularAccessTokenClaims,
+  RegularCognitoIdTokenClaims,
 } from '../lib';
 
-const idToken: CognitoIdTokenClaims = {
+const idToken: RegularCognitoIdTokenClaims = {
   origin_jti: 'xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx',
   sub: 'xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx',
   aud: 'xxxxxx',
@@ -20,7 +20,7 @@ const idToken: CognitoIdTokenClaims = {
   iat: 111111111,
   email: 'test@example.com',
 };
-const regularAccessToken: CognitoAccessTokenClaims = {
+const regularAccessToken: RegularAccessTokenClaims = {
   sub: 'xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx',
   device_key: 'ap-southeast-1_xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx',
   'cognito:groups': ['admins'],
@@ -38,7 +38,7 @@ const regularAccessToken: CognitoAccessTokenClaims = {
   username: 'xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx',
 };
 
-const googleAccessToken: GoogleAccessTokenClaims = {
+const googleAccessToken: GoogleCognitoAccessTokenClaims = {
   sub: 'xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx',
   'cognito:groups': ['ap-southeast-1_xxxxxxxxxxxxxx_Google'],
   iss:
@@ -55,7 +55,7 @@ const googleAccessToken: GoogleAccessTokenClaims = {
   username: 'Google_9999999999999999999999999',
 };
 
-const googleIdToken: CognitoGoogleIdTokenClaims = {
+const googleIdToken: GoogleCognitoIdTokenClaims = {
   at_hash: 'HUILGYBUIKGYIKGYUKgyukGYUKgyukGYUK',
   sub: 'xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx',
   'cognito:groups': ['ap-southeast-1_xxxxxxxxxxxxxx_Google'],

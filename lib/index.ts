@@ -16,35 +16,26 @@ export interface AuthToken<TClaims extends Claims> {
   ttl: number;
 }
 
-export type CognitoIdTokenClaims = {
+export interface IdTokenClaims {
+  token_use: 'id';
   iss: string;
   iat: number;
   exp: number;
   sub: string;
   aud: string;
-  token_use: 'id';
   origin_jti: string;
-  event_id: string;
-  'cognito:username': string;
-  'cognito:groups': string[];
+}
+
+export interface CognitoIdTokenClaims extends IdTokenClaims {
   auth_time: number;
   email: string;
-};
+  'cognito:username': string;
+  'cognito:groups': string[];
+}
 
-export type CognitoGoogleIdTokenClaims = {
-  token_use: 'id';
-  iss: string;
-  iat: number;
-  exp: number;
-  sub: string;
-  aud: string;
-  origin_jti: string;
-  auth_time: number;
+export interface GoogleCognitoIdTokenClaims extends CognitoIdTokenClaims {
   at_hash: string;
   email_verified: boolean;
-  'cognito:username': string;
-  'cognito:groups': string[];
-  email: string;
   identities: [
     {
       userId: string;
@@ -55,40 +46,39 @@ export type CognitoGoogleIdTokenClaims = {
       dateCreated: string;
     },
   ];
-};
+}
 
-export type CognitoAccessTokenClaims = {
-  token_use: 'access';
-  iss: string;
-  iat: number;
-  exp: number;
-  sub: string;
-  jti: string;
-  origin_jti: string;
-  scope: string;
-  auth_time: number;
-  client_id: string;
+export interface RegularCognitoIdTokenClaims extends CognitoIdTokenClaims {
   event_id: string;
-  username: string;
-  'cognito:groups': string[];
-  device_key: string;
-};
+}
 
-export type GoogleAccessTokenClaims = {
-  version: 2;
+export interface AccessTokenClaims {
   token_use: 'access';
   iss: string;
   iat: number;
   exp: number;
   sub: string;
   jti: string;
+}
+
+export interface CognitoAccessTokenClaims extends AccessTokenClaims {
   origin_jti: string;
   scope: string;
-  auth_time: number;
   client_id: string;
+  auth_time: number;
   username: string;
   'cognito:groups': string[];
-};
+}
+
+export interface RegularAccessTokenClaims extends CognitoAccessTokenClaims {
+  event_id: string;
+  device_key: string;
+}
+
+export interface GoogleCognitoAccessTokenClaims
+  extends CognitoAccessTokenClaims {
+  version: 2;
+}
 
 function assertString(val: unknown, message: string): asserts val is string {
   if (typeof val !== 'string') {
@@ -103,7 +93,7 @@ function assertNumber(val: unknown, message: string): asserts val is number {
 }
 
 export function createAuthToken<
-  T extends CognitoAccessTokenClaims | GoogleAccessTokenClaims
+  T extends CognitoAccessTokenClaims | GoogleCognitoAccessTokenClaims
 >({
   jwt,
   ips,
