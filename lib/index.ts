@@ -15,7 +15,6 @@ export interface AuthToken<TClaims extends AccessTokenClaims> {
 }
 export interface IdToken<TClaims extends IdTokenClaims> {
   id: string;
-  userId: string | undefined;
   claims: TClaims;
   isValid: () => boolean;
   expiresAt: number;
@@ -156,16 +155,9 @@ export function createAuthToken<
   });
 }
 
-export function createIdToken<T extends IdTokenClaims = IdTokenClaims>({
-  jwt,
-  claims,
-  userId,
-}: {
-  jwt: string;
-  ips: string[];
-  claims: Record<keyof T, unknown> | unknown;
-  userId?: string;
-}): IdToken<T> {
+export function createIdToken<T extends IdTokenClaims = IdTokenClaims>(
+  claims: Record<keyof T, unknown> | unknown,
+): IdToken<T> {
   assertPlainObject(claims, 'claims is not a plain object');
 
   const { origin_jti, exp, iat } = claims;
@@ -176,8 +168,6 @@ export function createIdToken<T extends IdTokenClaims = IdTokenClaims>({
 
   return Object.freeze({
     id: origin_jti,
-    jwt,
-    userId,
     expiresAt: exp,
     ttl: exp - iat,
     claims: claims as T,
