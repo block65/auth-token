@@ -1,9 +1,7 @@
 /* eslint-disable camelcase */
 import { AssertionError } from 'assert';
 
-type Claims = Record<string, unknown>;
-
-export interface AuthToken<TClaims extends Claims> {
+export interface AuthToken<TClaims extends AccessTokenClaims> {
   id: string;
   ips: string[];
   jwt: string;
@@ -15,18 +13,30 @@ export interface AuthToken<TClaims extends Claims> {
   expiresAt: number;
   ttl: number;
 }
+export interface IdToken<TClaims extends IdTokenClaims> {
+  id: string;
+  userId: string | undefined;
+  claims: TClaims;
+  isValid: () => boolean;
+  expiresAt: number;
+  ttl: number;
+}
 
-export interface IdTokenClaims {
-  token_use: 'id';
+export interface TokenClaims {
+  token_use: 'access' | 'id';
   iss: string;
   iat: number;
   exp: number;
   sub: string;
-  aud: string;
+}
+
+export interface IdTokenClaims extends TokenClaims {
+  token_use: 'id';
   origin_jti: string;
 }
 
 export interface CognitoIdTokenClaims extends IdTokenClaims {
+  aud: string;
   auth_time: number;
   email: string;
   'cognito:username': string;
@@ -52,12 +62,8 @@ export interface RegularCognitoIdTokenClaims extends CognitoIdTokenClaims {
   event_id: string;
 }
 
-export interface AccessTokenClaims {
+export interface AccessTokenClaims extends TokenClaims {
   token_use: 'access';
-  iss: string;
-  iat: number;
-  exp: number;
-  sub: string;
   jti: string;
 }
 
@@ -92,8 +98,26 @@ function assertNumber(val: unknown, message: string): asserts val is number {
   }
 }
 
+function isPlainObject(value: any): value is Record<string, unknown> {
+  if (Object.prototype.toString.call(value) !== '[object Object]') {
+    return false;
+  }
+
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === null || prototype === Object.getPrototypeOf({});
+}
+
+function assertPlainObject(
+  val: unknown,
+  message: string,
+): asserts val is Record<string, unknown> {
+  if (!isPlainObject(val)) {
+    throw new AssertionError({ message, actual: val, expected: Object });
+  }
+}
+
 export function createAuthToken<
-  T extends CognitoAccessTokenClaims | GoogleCognitoAccessTokenClaims
+  T extends AccessTokenClaims = AccessTokenClaims
 >({
   jwt,
   ips,
@@ -102,12 +126,14 @@ export function createAuthToken<
 }: {
   jwt: string;
   ips: string[];
-  claims: Record<string, unknown>;
+  claims: Record<keyof T, unknown> | unknown;
   userId?: string;
-}): AuthToken<any> {
+}): AuthToken<T> {
+  assertPlainObject(claims, 'claims is not a plain object');
+
   const { jti, client_id, exp, iat, scope } = claims;
 
-  assertString(jti, 'client_id is not a string');
+  assertString(jti, 'jti is not a string');
   assertString(client_id, 'client_id is not a string');
   assertString(scope, 'scope is not a string');
   assertNumber(exp, 'exp is not a number');
@@ -122,7 +148,39 @@ export function createAuthToken<
     scope: scope.split(' '),
     expiresAt: exp,
     ttl: exp - iat,
-    claims,
+    claims: claims as T,
+    isValid() {
+      const nowSecs = Date.now() / 1000;
+      return exp <= nowSecs && (!iat || iat >= nowSecs);
+    },
+  });
+}
+
+export function createIdToken<T extends IdTokenClaims = IdTokenClaims>({
+  jwt,
+  claims,
+  userId,
+}: {
+  jwt: string;
+  ips: string[];
+  claims: Record<keyof T, unknown> | unknown;
+  userId?: string;
+}): IdToken<T> {
+  assertPlainObject(claims, 'claims is not a plain object');
+
+  const { origin_jti, exp, iat } = claims;
+
+  assertString(origin_jti, 'origin_jti is not a string');
+  assertNumber(exp, 'exp is not a number');
+  assertNumber(iat, 'iat is not a number');
+
+  return Object.freeze({
+    id: origin_jti,
+    jwt,
+    userId,
+    expiresAt: exp,
+    ttl: exp - iat,
+    claims: claims as T,
     isValid() {
       const nowSecs = Date.now() / 1000;
       return exp <= nowSecs && (!iat || iat >= nowSecs);
