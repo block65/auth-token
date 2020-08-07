@@ -16,7 +16,6 @@ export interface AuthToken<
   ttl: number;
 }
 export interface IdToken<TClaims extends IdTokenClaims = IdTokenClaims> {
-  id: string;
   claims: TClaims;
   isValid: () => boolean;
   expiresAt: number;
@@ -33,7 +32,6 @@ export interface TokenClaims {
 
 export interface IdTokenClaims extends TokenClaims {
   token_use: 'id';
-  origin_jti: string;
 }
 
 export interface CognitoIdTokenClaims extends IdTokenClaims {
@@ -45,6 +43,7 @@ export interface CognitoIdTokenClaims extends IdTokenClaims {
 }
 
 export interface GoogleCognitoIdTokenClaims extends CognitoIdTokenClaims {
+  origin_jti: string;
   at_hash: string;
   email_verified: boolean;
   identities: [
@@ -158,7 +157,7 @@ export function createAuthToken<
 }
 
 export function createIdToken<T extends IdTokenClaims = IdTokenClaims>(
-  claims: Record<keyof T, unknown> | unknown,
+  claims: Partial<T> | unknown,
 ): IdToken<T> {
   assertPlainObject(claims, 'claims is not a plain object');
 
@@ -169,7 +168,6 @@ export function createIdToken<T extends IdTokenClaims = IdTokenClaims>(
   assertNumber(iat, 'iat is not a number');
 
   return Object.freeze({
-    id: origin_jti,
     expiresAt: exp,
     ttl: exp - iat,
     claims: claims as T,

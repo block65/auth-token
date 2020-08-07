@@ -9,7 +9,6 @@ import {
 
 test('regularIdToken', () => {
   const regularIdToken: RegularCognitoIdTokenClaims = {
-    origin_jti: 'xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx',
     sub: 'xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx',
     aud: 'xxxxxx',
     'cognito:groups': ['admins'],
@@ -25,7 +24,7 @@ test('regularIdToken', () => {
   };
 
   const auth = createIdToken(regularIdToken);
-  expect(auth.id).toEqual(regularIdToken.origin_jti);
+  expect(auth.expiresAt).toEqual(regularIdToken.exp);
 });
 
 test('regularAccessToken', () => {
@@ -56,6 +55,7 @@ test('regularAccessToken', () => {
   });
   expect(auth.id).toEqual(regularAccessToken.origin_jti);
 });
+
 test('googleAccessToken', () => {
   const googleAccessToken: GoogleCognitoAccessTokenClaims = {
     sub: 'xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx',
@@ -112,8 +112,7 @@ test('googleIdToken', () => {
     email: 'test@example.com',
   };
 
-  const auth = createIdToken(googleIdToken);
-  expect(auth.id).toEqual(googleIdToken.origin_jti);
+  const auth = createIdToken<GoogleCognitoIdTokenClaims>(googleIdToken);
 
-  expect(auth.claims.username.startsWith('Goog;e')).toBeTruthy();
+  expect(auth.claims['cognito:username'].startsWith('Google')).toBeTruthy();
 });
