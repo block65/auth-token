@@ -7,7 +7,7 @@
     "build": "tsc",
     "build:clean": "rimraf dist/*",
     "build:watch": "tsc -w",
-    "prepare": "yarn build:clean && yarn build",
+    "prepare": "yarn test && yarn build:clean && yarn build",
     "test": "jest"
   },
   "devDependencies": {

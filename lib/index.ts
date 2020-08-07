@@ -163,7 +163,6 @@ export function createIdToken<T extends IdTokenClaims = IdTokenClaims>(
 
   const { origin_jti, exp, iat } = claims;
 
-  assertString(origin_jti, 'origin_jti is not a string');
   assertNumber(exp, 'exp is not a number');
   assertNumber(iat, 'iat is not a number');
 
