@@ -12,14 +12,15 @@ export interface AuthToken<
   scope: string[];
   claims: TClaims;
   isValid: () => boolean;
-  expiresAt: Date;
   issuedAt: Date;
+  expiresAt: Date;
   ttl: number;
 }
 export interface IdToken<TClaims extends IdTokenClaims = IdTokenClaims> {
   claims: TClaims;
   isValid: () => boolean;
-  expiresAt: number;
+  issuedAt: Date;
+  expiresAt: Date;
   ttl: number;
 }
 
@@ -137,8 +138,8 @@ export function createAuthToken<
   assertString(jti, 'jti is not a string');
   assertString(client_id, 'client_id is not a string');
   assertString(scope, 'scope is not a string');
-  assertNumber(exp, 'exp is not a number');
   assertNumber(iat, 'iat is not a number');
+  assertNumber(exp, 'exp is not a number');
 
   return Object.freeze({
     id: jti,
@@ -165,11 +166,12 @@ export function createIdToken<T extends IdTokenClaims = IdTokenClaims>(
 
   const { exp, iat } = claims;
 
-  assertNumber(exp, 'exp is not a number');
   assertNumber(iat, 'iat is not a number');
+  assertNumber(exp, 'exp is not a number');
 
   return Object.freeze({
-    expiresAt: exp,
+    issuedAt: new Date(iat * 1000),
+    expiresAt: new Date(exp * 1000),
     ttl: exp - iat,
     claims: claims as T,
     isValid() {

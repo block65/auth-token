@@ -25,6 +25,7 @@ test('regularIdToken', () => {
 
   const auth = createIdToken(regularIdToken);
   expect(auth.expiresAt).toEqual(regularIdToken.exp);
+  expect(auth.expiresAt).toBeInstanceOf(Date);
 });
 
 test('regularAccessToken', () => {
@@ -54,6 +55,8 @@ test('regularAccessToken', () => {
     userId: regularAccessToken.sub,
   });
   expect(auth.id).toEqual(regularAccessToken.origin_jti);
+  expect(auth.issuedAt).toBeInstanceOf(Date);
+  expect(auth.expiresAt).toBeInstanceOf(Date);
 });
 
 test('googleAccessToken', () => {
