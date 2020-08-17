@@ -12,7 +12,8 @@ export interface AuthToken<
   scope: string[];
   claims: TClaims;
   isValid: () => boolean;
-  expiresAt: number;
+  expiresAt: Date;
+  issuedAt: Date;
   ttl: number;
 }
 export interface IdToken<TClaims extends IdTokenClaims = IdTokenClaims> {
@@ -146,7 +147,8 @@ export function createAuthToken<
     userId,
     clientId: client_id,
     scope: scope.split(' '),
-    expiresAt: exp,
+    issuedAt: new Date(iat * 1000),
+    expiresAt: new Date(exp * 1000),
     ttl: exp - iat,
     claims: claims as T,
     isValid() {
@@ -161,7 +163,7 @@ export function createIdToken<T extends IdTokenClaims = IdTokenClaims>(
 ): IdToken<T> {
   assertPlainObject(claims, 'claims is not a plain object');
 
-  const { origin_jti, exp, iat } = claims;
+  const { exp, iat } = claims;
 
   assertNumber(exp, 'exp is not a number');
   assertNumber(iat, 'iat is not a number');
