@@ -78,6 +78,13 @@ export interface CognitoAccessTokenClaims extends AccessTokenClaims {
   'cognito:groups': string[];
 }
 
+export interface CognitoClientAccessTokenClaims extends AccessTokenClaims {
+  version: 2;
+  auth_time: number;
+  scope: string;
+  client_id: string;
+}
+
 export interface RegularAccessTokenClaims extends CognitoAccessTokenClaims {
   event_id: string;
   device_key: string;

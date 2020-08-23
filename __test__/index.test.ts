@@ -1,4 +1,6 @@
 import {
+  CognitoAccessTokenClaims,
+  CognitoClientAccessTokenClaims,
   createAuthToken,
   createIdToken,
   GoogleCognitoAccessTokenClaims,
@@ -24,7 +26,7 @@ test('regularIdToken', () => {
   };
 
   const auth = createIdToken(regularIdToken);
-  expect(auth.expiresAt).toEqual(regularIdToken.exp);
+  expect(auth.expiresAt.toJSON()).toEqual('1973-07-10T00:11:51.000Z');
   expect(auth.expiresAt).toBeInstanceOf(Date);
 });
 
@@ -118,4 +120,30 @@ test('googleIdToken', () => {
   const auth = createIdToken<GoogleCognitoIdTokenClaims>(googleIdToken);
 
   expect(auth.claims['cognito:username'].startsWith('Google')).toBeTruthy();
+});
+
+test('clientAccessToken', () => {
+  const clientAccessToken: CognitoClientAccessTokenClaims = {
+    sub: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    token_use: 'access',
+    scope: 'https://api.colacube.dev/billing:update',
+    auth_time: 1598180222,
+    iss:
+      'https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_kc4VrMurv',
+    exp: 1598183822,
+    iat: 1598180222,
+    version: 2,
+    jti: 'bf67ea10-7a9c-493b-a4c4-0681a6aeb9ad',
+    client_id: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+  };
+
+  const auth = createAuthToken({
+    ips: ['192.2.0.1'],
+    // jwt jokes
+    jwt: Buffer.from(JSON.stringify(clientAccessToken)).toString('base64'),
+    claims: clientAccessToken,
+    userId: clientAccessToken.sub,
+  });
+
+  expect(auth.id).toEqual(clientAccessToken.jti);
 });
