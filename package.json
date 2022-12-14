@@ -2,7 +2,13 @@
   "name": "@block65/auth-token",
   "version": "3.0.2",
   "license": "UNLICENSED",
-  "main": "dist/index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/lib/index.d.ts",
+      "default": "./dist/lib/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "build:clean": "rimraf dist/*",
