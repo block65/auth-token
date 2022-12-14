@@ -1,4 +1,3 @@
-import {} from '@block65/custom-error';
 import { AssertionError } from './assertion-error.js';
 import type { AccessTokenClaims, AnyClaims, IdTokenClaims } from './claims.js';
 
