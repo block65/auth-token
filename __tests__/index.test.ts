@@ -1,5 +1,8 @@
 import { test } from '@jest/globals';
-import type { AwsCognitoGoogleAccessTokenClaims, AwsCognitoGoogleIdTokenClaims } from '../lib/aws-cognito-google.js';
+import type {
+  AwsCognitoGoogleAccessTokenClaims,
+  AwsCognitoGoogleIdTokenClaims,
+} from '../lib/aws-cognito-google.js';
 import type {
   AwsCognitoRegularAccessTokenClaims,
   AwsCognitoRegularIdTokenClaims,

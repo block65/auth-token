@@ -28,9 +28,7 @@ export interface IdToken<TClaims extends IdTokenClaims> {
   ttl: number;
 }
 
-export function withNullProto<T extends Record<string, unknown>>(
-  obj: T
-): T {
+export function withNullProto<T extends Record<string, unknown>>(obj: T): T {
   return Object.assign(Object.create(null) as T, obj);
 }
 
@@ -57,7 +55,7 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 
 function assertPlainObject(
   val: unknown,
-  message: string
+  message: string,
 ): asserts val is Record<string, unknown> {
   if (!isPlainObject(val)) {
     throw new AssertionError({ message, actual: val, expected: Object });
@@ -67,7 +65,7 @@ function assertPlainObject(
 // async for future
 export async function sha256(
   bufferOrString: BinaryLike,
-  encoding: Encoding = 'utf-8'
+  encoding: Encoding = 'utf-8',
 ): Promise<Hash> {
   const hash = createHash('sha256');
   if (typeof bufferOrString === 'string') {
@@ -117,12 +115,12 @@ export async function createAuthToken<TClaims extends AnyClaims>({
         const nowSecs = Date.now() / 1000;
         return exp <= nowSecs && (!iat || iat >= nowSecs);
       },
-    })
+    }),
   );
 }
 
 export function createIdToken<T extends IdTokenClaims>(
-  claims: Partial<T> | unknown
+  claims: Partial<T> | unknown,
 ): IdToken<T> {
   assertPlainObject(claims, 'claims is not a plain object');
 

@@ -8,4 +8,4 @@ interface CommonClaims {
   scope: string;
 }
 
-export type Auth0TokenClaims = CommonClaims
+export type Auth0TokenClaims = CommonClaims;
