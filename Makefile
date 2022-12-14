@@ -13,6 +13,7 @@ test:
 
 .PHONY: test
 test:
+	yarn tsc --noEmit
 	NODE_OPTIONS=--experimental-vm-modules yarn jest
 
 node_modules: package.json
