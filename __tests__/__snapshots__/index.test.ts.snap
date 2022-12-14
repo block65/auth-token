@@ -1,0 +1,167 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`clientAccessToken 1`] = `
+{
+  "claims": {
+    "auth_time": 1598180222,
+    "client_id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "exp": 1598183822,
+    "iat": 1598180222,
+    "iss": "https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_kc4VrMurv",
+    "jti": "bf67ea10-7a9c-493b-a4c4-0681a6aeb9ad",
+    "scope": "https://example.com/billing:update",
+    "sub": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "token_use": "access",
+    "version": 2,
+  },
+  "clientId": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "expiresAt": 2020-08-23T11:57:02.000Z,
+  "id": "bf67ea10-7a9c-493b-a4c4-0681a6aeb9ad",
+  "ips": [
+    "192.2.0.1",
+  ],
+  "isValid": [Function],
+  "issuedAt": 2020-08-23T10:57:02.000Z,
+  "jwt": "eyJzdWIiOiJ4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiaHR0cHM6Ly9leGFtcGxlLmNvbS9iaWxsaW5nOnVwZGF0ZSIsImF1dGhfdGltZSI6MTU5ODE4MDIyMiwiaXNzIjoiaHR0cHM6Ly9jb2duaXRvLWlkcC5hcC1zb3V0aGVhc3QtMS5hbWF6b25hd3MuY29tL2FwLXNvdXRoZWFzdC0xX2tjNFZyTXVydiIsImV4cCI6MTU5ODE4MzgyMiwiaWF0IjoxNTk4MTgwMjIyLCJ2ZXJzaW9uIjoyLCJqdGkiOiJiZjY3ZWExMC03YTljLTQ5M2ItYTRjNC0wNjgxYTZhZWI5YWQiLCJjbGllbnRfaWQiOiJ4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCJ9",
+  "scope": [
+    "https://example.com/billing:update",
+  ],
+  "sub": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "ttl": 3600,
+}
+`;
+
+exports[`googleAccessToken 1`] = `
+{
+  "claims": {
+    "auth_time": 111111111,
+    "client_id": "efefefefefefefefefefefefefefefe",
+    "cognito:groups": [
+      "ap-southeast-1_xxxxxxxxxxxxxx_Google",
+    ],
+    "exp": 111111111,
+    "iat": 111111111,
+    "iss": "https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_xxxxxxxxxxxxxx",
+    "jti": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+    "origin_jti": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+    "scope": "openid https://example.com/default email",
+    "sub": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+    "token_use": "access",
+    "username": "Google_9999999999999999999999999",
+    "version": 2,
+  },
+  "clientId": "efefefefefefefefefefefefefefefe",
+  "expiresAt": 1973-07-10T00:11:51.000Z,
+  "id": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+  "ips": [
+    "192.2.0.1",
+  ],
+  "isValid": [Function],
+  "issuedAt": 1973-07-10T00:11:51.000Z,
+  "jwt": "eyJzdWIiOiJ4eHh4LXh4eHh4LXh4eHh4eC14eHh4eHgteHh4eHh4eHh4eHh4IiwiY29nbml0bzpncm91cHMiOlsiYXAtc291dGhlYXN0LTFfeHh4eHh4eHh4eHh4eHhfR29vZ2xlIl0sImlzcyI6Imh0dHBzOi8vY29nbml0by1pZHAuYXAtc291dGhlYXN0LTEuYW1hem9uYXdzLmNvbS9hcC1zb3V0aGVhc3QtMV94eHh4eHh4eHh4eHh4eCIsInZlcnNpb24iOjIsImNsaWVudF9pZCI6ImVmZWZlZmVmZWZlZmVmZWZlZmVmZWZlZmVmZWZlZmUiLCJvcmlnaW5fanRpIjoieHh4eC14eHh4eC14eHh4eHgteHh4eHh4LXh4eHh4eHh4eHh4eCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoib3BlbmlkIGh0dHBzOi8vZXhhbXBsZS5jb20vZGVmYXVsdCBlbWFpbCIsImF1dGhfdGltZSI6MTExMTExMTExLCJleHAiOjExMTExMTExMSwiaWF0IjoxMTExMTExMTEsImp0aSI6Inh4eHgteHh4eHgteHh4eHh4LXh4eHh4eC14eHh4eHh4eHh4eHgiLCJ1c2VybmFtZSI6Ikdvb2dsZV85OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5In0=",
+  "scope": [
+    "openid",
+    "https://example.com/default",
+    "email",
+  ],
+  "sub": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+  "ttl": 0,
+}
+`;
+
+exports[`googleIdToken 1`] = `
+{
+  "claims": {
+    "at_hash": "HUILGYBUIKGYIKGYUKgyukGYUKgyukGYUK",
+    "aud": "efefefefefefefefefefefefefefefe",
+    "auth_time": 111111111,
+    "cognito:groups": [
+      "ap-southeast-1_xxxxxxxxxxxxxx_Google",
+    ],
+    "cognito:username": "Google_99999999999999999999",
+    "email": "test@example.com",
+    "email_verified": false,
+    "exp": 11111111111,
+    "iat": 1111111111,
+    "identities": [
+      {
+        "dateCreated": "999999999999999",
+        "issuer": null,
+        "primary": "true",
+        "providerName": "Google",
+        "providerType": "Google",
+        "userId": "99999999999999999999999999",
+      },
+    ],
+    "iss": "https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_xxxxxxxxxxxxxx",
+    "origin_jti": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+    "sub": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+    "token_use": "id",
+  },
+  "expiresAt": 2322-02-05T19:45:11.000Z,
+  "isValid": [Function],
+  "issuedAt": 2005-03-18T01:58:31.000Z,
+  "ttl": 10000000000,
+}
+`;
+
+exports[`regularAccessToken 1`] = `
+{
+  "claims": {
+    "auth_time": 111111111,
+    "client_id": "efefefefefefefefefefefefefefefe",
+    "cognito:groups": [
+      "admins",
+    ],
+    "device_key": "ap-southeast-1_xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+    "event_id": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+    "exp": 111111111,
+    "iat": 111111111,
+    "iss": "https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_xxxxxxxxxxxxxx",
+    "jti": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+    "origin_jti": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+    "scope": "aws.cognito.signin.user.admin",
+    "sub": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+    "token_use": "access",
+    "username": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+  },
+  "clientId": "efefefefefefefefefefefefefefefe",
+  "expiresAt": 1973-07-10T00:11:51.000Z,
+  "id": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+  "ips": [
+    "192.2.0.1",
+  ],
+  "isValid": [Function],
+  "issuedAt": 1973-07-10T00:11:51.000Z,
+  "jwt": "eyJzdWIiOiJ4eHh4LXh4eHh4LXh4eHh4eC14eHh4eHgteHh4eHh4eHh4eHh4IiwiZGV2aWNlX2tleSI6ImFwLXNvdXRoZWFzdC0xX3h4eHgteHh4eHgteHh4eHh4LXh4eHh4eC14eHh4eHh4eHh4eHgiLCJjb2duaXRvOmdyb3VwcyI6WyJhZG1pbnMiXSwiaXNzIjoiaHR0cHM6Ly9jb2duaXRvLWlkcC5hcC1zb3V0aGVhc3QtMS5hbWF6b25hd3MuY29tL2FwLXNvdXRoZWFzdC0xX3h4eHh4eHh4eHh4eHh4IiwiY2xpZW50X2lkIjoiZWZlZmVmZWZlZmVmZWZlZmVmZWZlZmVmZWZlZmVmZSIsIm9yaWdpbl9qdGkiOiJ4eHh4LXh4eHh4LXh4eHh4eC14eHh4eHgteHh4eHh4eHh4eHh4IiwiZXZlbnRfaWQiOiJ4eHh4LXh4eHh4LXh4eHh4eC14eHh4eHgteHh4eHh4eHh4eHh4IiwidG9rZW5fdXNlIjoiYWNjZXNzIiwic2NvcGUiOiJhd3MuY29nbml0by5zaWduaW4udXNlci5hZG1pbiIsImF1dGhfdGltZSI6MTExMTExMTExLCJleHAiOjExMTExMTExMSwiaWF0IjoxMTExMTExMTEsImp0aSI6Inh4eHgteHh4eHgteHh4eHh4LXh4eHh4eC14eHh4eHh4eHh4eHgiLCJ1c2VybmFtZSI6Inh4eHgteHh4eHgteHh4eHh4LXh4eHh4eC14eHh4eHh4eHh4eHgifQ==",
+  "scope": [
+    "aws.cognito.signin.user.admin",
+  ],
+  "sub": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+  "ttl": 0,
+}
+`;
+
+exports[`regularIdToken 1`] = `
+{
+  "claims": {
+    "aud": "xxxxxx",
+    "auth_time": 111111111,
+    "cognito:groups": [
+      "admins",
+    ],
+    "cognito:username": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+    "email": "test@example.com",
+    "event_id": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+    "exp": 111111111,
+    "iat": 111111111,
+    "iss": "https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_xxxxxxxxxxxxxx",
+    "sub": "xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx",
+    "token_use": "id",
+  },
+  "expiresAt": 1973-07-10T00:11:51.000Z,
+  "isValid": [Function],
+  "issuedAt": 1973-07-10T00:11:51.000Z,
+  "ttl": 0,
+}
+`;
