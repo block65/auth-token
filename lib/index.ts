@@ -82,6 +82,7 @@ export async function createAuthToken<TClaims extends AnyClaims>({
 }): Promise<AuthToken<TClaims>> {
   assertPlainObject(claims, 'claims is not a plain object');
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const { jti, iss, sub, exp, iat, scope, client_id } = claims;
 
   assertString(sub, 'sub is not a string');
