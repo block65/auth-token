@@ -15,7 +15,7 @@ export interface AuthToken<TClaims extends AnyClaims = never> {
   ttl: number;
 }
 
-export interface IdToken<TClaims extends AnyClaims> {
+export interface IdToken<TClaims extends IdTokenClaims> {
   claims: TClaims;
   isValid: () => boolean;
   issuedAt: Date;
