@@ -1,13 +1,13 @@
-import { AssertionError } from 'node:assert';
-import { BinaryLike, createHash, Encoding, Hash } from 'node:crypto';
-import type { AnyClaims, IdTokenClaims } from './claims.js';
+import {} from '@block65/custom-error';
+import { AssertionError } from './assertion-error.js';
+import type { AccessTokenClaims, AnyClaims, IdTokenClaims } from './claims.js';
 
 export * from './claims.js';
 export * from './aws-cognito.js';
 export * from './aws-cognito-google.js';
 export * from './auth0.js';
 
-export interface AuthToken<TClaims extends AnyClaims = never> {
+export interface AuthToken<TClaims extends AnyClaims = AccessTokenClaims> {
   id: string;
   ips: string[];
   jwt: string;
@@ -63,16 +63,15 @@ function assertPlainObject(
   }
 }
 
-// async for future
-export async function sha256(
-  bufferOrString: BinaryLike,
-  encoding: Encoding = 'utf-8',
-): Promise<Hash> {
-  const hash = createHash('sha256');
-  if (typeof bufferOrString === 'string') {
-    return hash.update(bufferOrString, encoding);
-  }
-  return hash.update(bufferOrString);
+async function sha256(message: string) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+  return hashHex;
 }
 
 export async function createAuthToken<TClaims extends AnyClaims>({
@@ -96,9 +95,7 @@ export async function createAuthToken<TClaims extends AnyClaims>({
   assertNumber(iat, 'iat is not a number');
   assertNumber(exp, 'exp is not a number');
 
-  const id = jti
-    ? String(jti)
-    : await sha256(jwt).then((hash) => hash.digest('base64url'));
+  const id = jti ? String(jti) : await sha256(jwt);
 
   return withNullProto(
     Object.freeze({
