@@ -69,7 +69,7 @@ test('googleAccessToken', async () => {
     client_id: 'efefefefefefefefefefefefefefefe',
     origin_jti: 'xxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxxxxxx',
     token_use: 'access',
-    scope: 'openid https://api.colacube.dev/default email',
+    scope: 'openid https://example.com/default email',
     auth_time: 111111111,
     exp: 111111111,
     iat: 111111111,
@@ -124,7 +124,7 @@ test('clientAccessToken', async () => {
   const clientAccessToken: CognitoClientAccessTokenClaims = {
     sub: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     token_use: 'access',
-    scope: 'https://api.colacube.dev/billing:update',
+    scope: 'https://example.com/billing:update',
     auth_time: 1598180222,
     iss: 'https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_kc4VrMurv',
     exp: 1598183822,
