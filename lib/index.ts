@@ -2,6 +2,11 @@ import { AssertionError } from 'node:assert';
 import { BinaryLike, createHash, Encoding, Hash } from 'node:crypto';
 import type { AnyClaims, IdTokenClaims } from './claims.js';
 
+export * from './claims.js';
+export * from './aws-cognito.js';
+export * from './aws-cognito-google.js';
+export * from './auth0.js';
+
 export interface AuthToken<TClaims extends AnyClaims = never> {
   id: string;
   ips: string[];
