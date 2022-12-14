@@ -1,14 +1,12 @@
-/* eslint-disable camelcase */
-import { AssertionError } from 'assert';
+import { AssertionError } from 'node:assert';
+import { BinaryLike, createHash, Encoding, Hash } from 'node:crypto';
+import type { AnyClaims, IdTokenClaims } from './claims.js';
 
-export interface AuthToken<
-  TClaims extends AccessTokenClaims = AccessTokenClaims
-> {
+export interface AuthToken<TClaims extends AnyClaims = never> {
   id: string;
   ips: string[];
   jwt: string;
-  clientId: string;
-  userId: string | undefined;
+  sub: string;
   scope: string[];
   claims: TClaims;
   isValid: () => boolean;
@@ -16,7 +14,8 @@ export interface AuthToken<
   expiresAt: Date;
   ttl: number;
 }
-export interface IdToken<TClaims extends IdTokenClaims = IdTokenClaims> {
+
+export interface IdToken<TClaims extends AnyClaims> {
   claims: TClaims;
   isValid: () => boolean;
   issuedAt: Date;
@@ -24,75 +23,10 @@ export interface IdToken<TClaims extends IdTokenClaims = IdTokenClaims> {
   ttl: number;
 }
 
-export interface TokenClaims {
-  token_use: 'access' | 'id';
-  iss: string;
-  iat: number;
-  exp: number;
-  sub: string;
-}
-
-export interface IdTokenClaims extends TokenClaims {
-  token_use: 'id';
-}
-
-export interface CognitoIdTokenClaims extends IdTokenClaims {
-  aud: string;
-  auth_time: number;
-  email: string;
-  'cognito:username': string;
-  'cognito:groups': string[];
-}
-
-export interface GoogleCognitoIdTokenClaims extends CognitoIdTokenClaims {
-  origin_jti: string;
-  at_hash: string;
-  email_verified: boolean;
-  identities: [
-    {
-      userId: string;
-      providerName: 'Google';
-      providerType: 'Google';
-      issuer: null;
-      primary: 'true';
-      dateCreated: string;
-    },
-  ];
-}
-
-export interface RegularCognitoIdTokenClaims extends CognitoIdTokenClaims {
-  event_id: string;
-}
-
-export interface AccessTokenClaims extends TokenClaims {
-  token_use: 'access';
-  jti: string;
-}
-
-export interface CognitoAccessTokenClaims extends AccessTokenClaims {
-  origin_jti: string;
-  scope: string;
-  client_id: string;
-  auth_time: number;
-  username: string;
-  'cognito:groups': string[];
-}
-
-export interface CognitoClientAccessTokenClaims extends AccessTokenClaims {
-  version: 2;
-  auth_time: number;
-  scope: string;
-  client_id: string;
-}
-
-export interface RegularAccessTokenClaims extends CognitoAccessTokenClaims {
-  event_id: string;
-  device_key: string;
-}
-
-export interface GoogleCognitoAccessTokenClaims
-  extends CognitoAccessTokenClaims {
-  version: 2;
+export function withNullProto<T extends Record<string, unknown>>(
+  obj: T
+): T {
+  return Object.assign(Object.create(null) as T, obj);
 }
 
 function assertString(val: unknown, message: string): asserts val is string {
@@ -107,67 +41,82 @@ function assertNumber(val: unknown, message: string): asserts val is number {
   }
 }
 
-function isPlainObject(value: any): value is Record<string, unknown> {
+function isPlainObject(value: unknown): value is Record<string, unknown> {
   if (Object.prototype.toString.call(value) !== '[object Object]') {
     return false;
   }
 
-  const prototype = Object.getPrototypeOf(value);
+  const prototype = Object.getPrototypeOf(value) as unknown;
   return prototype === null || prototype === Object.getPrototypeOf({});
 }
 
 function assertPlainObject(
   val: unknown,
-  message: string,
+  message: string
 ): asserts val is Record<string, unknown> {
   if (!isPlainObject(val)) {
     throw new AssertionError({ message, actual: val, expected: Object });
   }
 }
 
-export function createAuthToken<
-  T extends AccessTokenClaims = AccessTokenClaims
->({
+// async for future
+export async function sha256(
+  bufferOrString: BinaryLike,
+  encoding: Encoding = 'utf-8'
+): Promise<Hash> {
+  const hash = createHash('sha256');
+  if (typeof bufferOrString === 'string') {
+    return hash.update(bufferOrString, encoding);
+  }
+  return hash.update(bufferOrString);
+}
+
+export async function createAuthToken<TClaims extends AnyClaims>({
   jwt,
-  ips,
   claims,
-  userId,
+  ips,
 }: {
   jwt: string;
+  claims: TClaims;
   ips: string[];
-  claims: Record<keyof T, unknown> | unknown;
-  userId?: string;
-}): AuthToken<T> {
+}): Promise<AuthToken<TClaims>> {
   assertPlainObject(claims, 'claims is not a plain object');
 
-  const { jti, client_id, exp, iat, scope } = claims;
+  const { jti, iss, sub, exp, iat, scope, client_id } = claims;
 
-  assertString(jti, 'jti is not a string');
+  assertString(sub, 'sub is not a string');
   assertString(client_id, 'client_id is not a string');
+  assertString(iss, 'iss is not a string');
   assertString(scope, 'scope is not a string');
   assertNumber(iat, 'iat is not a number');
   assertNumber(exp, 'exp is not a number');
 
-  return Object.freeze({
-    id: jti,
-    ips,
-    jwt,
-    userId,
-    clientId: client_id,
-    scope: scope.split(' '),
-    issuedAt: new Date(iat * 1000),
-    expiresAt: new Date(exp * 1000),
-    ttl: exp - iat,
-    claims: claims as T,
-    isValid() {
-      const nowSecs = Date.now() / 1000;
-      return exp <= nowSecs && (!iat || iat >= nowSecs);
-    },
-  });
+  const id = jti
+    ? String(jti)
+    : await sha256(jwt).then((hash) => hash.digest('base64url'));
+
+  return withNullProto(
+    Object.freeze({
+      id,
+      ips,
+      jwt,
+      sub,
+      clientId: client_id,
+      scope: scope.split(' '),
+      issuedAt: new Date(iat * 1000),
+      expiresAt: new Date(exp * 1000),
+      ttl: exp - iat,
+      claims,
+      isValid() {
+        const nowSecs = Date.now() / 1000;
+        return exp <= nowSecs && (!iat || iat >= nowSecs);
+      },
+    })
+  );
 }
 
-export function createIdToken<T extends IdTokenClaims = IdTokenClaims>(
-  claims: Partial<T> | unknown,
+export function createIdToken<T extends IdTokenClaims>(
+  claims: Partial<T> | unknown
 ): IdToken<T> {
   assertPlainObject(claims, 'claims is not a plain object');
 
