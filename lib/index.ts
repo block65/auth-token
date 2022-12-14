@@ -12,6 +12,7 @@ export interface AuthToken<TClaims extends AnyClaims = never> {
   ips: string[];
   jwt: string;
   sub: string;
+  clientId: string;
   scope: string[];
   claims: TClaims;
   isValid: () => boolean;
