@@ -12,6 +12,7 @@ export interface IdTokenClaims extends CommonClaims {
 }
 
 export interface AccessTokenClaims extends CommonClaims {
+  client_id: string;
   token_use: 'access';
 }
 
